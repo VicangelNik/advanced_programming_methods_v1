@@ -17,8 +17,8 @@ public final class MethodAccessor implements IAccessor {
   }
 
   @Override
-  public StringBuilder getDeclared(String pckClassName) {
-    final var stringBuilder = new StringBuilder("2a: ");
+  public StringBuilder getDeclared(String pckClassName, StringBuilder stringBuilder) {
+    stringBuilder.append("2a ").append(pckClassName).append(" : ");
     try {
       final Class<?> classObject = Class.forName(pckClassName);
       final List<String> methodNameList = Stream.of(classObject.getDeclaredMethods()).limit(topN).map(Method::getName).toList();

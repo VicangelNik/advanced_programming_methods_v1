@@ -17,8 +17,9 @@ class FieldAccessorTest {
     System.out.println(inputFilePath);
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
     final var fieldAccessor = new FieldAccessor(10);
+    StringBuilder stringBuilder = new StringBuilder();
     fileHandler.readFile().forEach(pckClassName ->
-                                     Assertions.assertFalse(fieldAccessor.getDeclared(pckClassName).toString().isBlank()));
+                                     Assertions.assertFalse(fieldAccessor.getDeclared(pckClassName, stringBuilder).toString().isBlank()));
   }
 
   @Test

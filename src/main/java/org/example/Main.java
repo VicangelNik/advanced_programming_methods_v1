@@ -10,13 +10,12 @@ import org.example.error.ApplicationException;
 import org.example.file.FileWriterHandler;
 import org.example.file.ReadAllFilesFileReader;
 import org.example.type.Graph;
-import org.example.type.SubClassFinding;
 import org.example.type.SuperTypeClassFinding;
 
 public class Main {
 
   private static int topN = 10;
-  public static  List<String> packagesInputList;
+  public static List<String> packagesInputList;
 
   public static void main(String[] args) {
     checkInputParameters(args);
@@ -27,26 +26,29 @@ public class Main {
     final var methodAccessor = new MethodAccessor(topN);
     final var fieldAccessorInheritedWrapper = new AccessorInheritedWrapper(fieldAccessor);
     final var methodAccessorInheritedWrapper = new AccessorInheritedWrapper(fieldAccessor);
-    final var superClassFinding = new SuperTypeClassFinding(topN);
+    final var superTypeClassFinding = new SuperTypeClassFinding(topN);
 
-    fileHandler.readFile().forEach(pckClassName -> {
-
-//      final var result = fieldAccessor.getDeclared(pckClassName)
-//        .append(fieldAccessorInheritedWrapper.getStringBuilder(pckClassName, "1b: "))
-//        .append(methodAccessor.getDeclared(pckClassName))
-//        .append(methodAccessorInheritedWrapper.getStringBuilder(pckClassName, "2b: "))
-//        .append(superClassFinding.findSuperClassesFromClass(pckClassName));
-//
-//      fileWriterHandler.writeToFile(result.toString());
-
-    });
     Graph<String> graph = new Graph<>();
-    packagesInputList.forEach(pckClassName->
-                              {
-                                Graph.createGraph(graph,pckClassName);
-                              });
+    packagesInputList.forEach(pckClassName ->
+                                Graph.createGraph(graph, pckClassName));
+    final var stringBuilder = new StringBuilder();
 
-    System.out.println();
+    packagesInputList.forEach(pckClassName -> {
+
+      fieldAccessor.getDeclared(pckClassName, stringBuilder);
+      fieldAccessorInheritedWrapper.getStringBuilder(pckClassName, "1b ", stringBuilder);
+      methodAccessor.getDeclared(pckClassName, stringBuilder);
+      methodAccessorInheritedWrapper.getStringBuilder(pckClassName, "2b ", stringBuilder);
+      superTypeClassFinding.findSuperTypesFromClass(graph, pckClassName, stringBuilder);
+
+      fileWriterHandler.writeToFile(stringBuilder.toString());
+    });
+
+//
+//    packagesInputList.forEach(pckClassName ->
+//
+//  );
+
   }
 
   private static void checkInputParameters(final String[] args) {

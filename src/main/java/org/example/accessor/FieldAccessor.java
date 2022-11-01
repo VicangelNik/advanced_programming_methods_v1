@@ -17,8 +17,8 @@ public final class FieldAccessor implements IAccessor {
   }
 
   @Override
-  public StringBuilder getDeclared(String pckClassName) {
-    final var stringBuilder = new StringBuilder("1a: ");
+  public StringBuilder getDeclared(String pckClassName, StringBuilder stringBuilder) {
+    stringBuilder.append("1a ").append(pckClassName). append(" : ");
     try {
       final Class<?> classObject = Class.forName(pckClassName);
       final List<String> fieldNameList = Stream.of(classObject.getDeclaredFields()).limit(topN).map(Field::getName).toList();

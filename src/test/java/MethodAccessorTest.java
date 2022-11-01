@@ -17,8 +17,9 @@ class MethodAccessorTest {
     System.out.println(inputFilePath);
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
     final var methodAccessor = new MethodAccessor(10);
+    StringBuilder stringBuilder = new StringBuilder();
     fileHandler.readFile().forEach(pckClassName ->
-                                     Assertions.assertFalse(methodAccessor.getDeclared(pckClassName).toString().isBlank())
+                                     Assertions.assertFalse(methodAccessor.getDeclared(pckClassName, stringBuilder).toString().isBlank())
     );
   }
 

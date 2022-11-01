@@ -3,19 +3,19 @@ package org.example.type;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.example.Main.packagesInputList;
 
 public class Graph<T> {
 
-  private Map<T, List<T>> edgesMap = new HashMap<>();
+  private Map<T, Set<T>> edgesMap = new HashMap<>();
 
   public void addNewVertex(T s) {
-    edgesMap.put(s, new LinkedList<>());
+    edgesMap.put(s, new HashSet<>());
   }
 
   public void addNewEdge(T source, T destination, boolean bidirectional) {
@@ -41,30 +41,47 @@ public class Graph<T> {
     edgesMap.get(source).add(destination);
   }
 
-  public boolean containsVertex(T key) {
-    return edgesMap.containsKey(key);
+  /**
+   * Vertex in the graph indicates a package
+   *
+   * @param key
+   */
+  public Set<T> getVertex(T key) {
+    return edgesMap.get(key);
   }
 
+  /**
+   * @param graph
+   * @param pckClassName
+   *
+   * @return Graph
+   *
+   * @apiNote getInterfaces, getSuperclass are used instead of getGenericInterfaces, getGenericSuperclass
+   * because the latter return the implementation (java.lang.Comparable<java.lang.Integer>)
+   * but we want just the java.lang.Comparable in order to be recognized by Class.forName
+   */
   public static Graph<String> createGraph(Graph<String> graph, String pckClassName) {
     if (isPackageUnderTestValid(pckClassName)) {
       try {
         Class<?> classObject = Class.forName(pckClassName);
-       // System.out.println(classObject.getName());
+
         // the class that our input/given class extends (supertype of our class)
-        Class<?> finalClassObject = classObject;
-        Optional.ofNullable(classObject.getGenericSuperclass())
-          .ifPresent(genericSuperClass -> graph.addNewEdge(finalClassObject.getTypeName(), genericSuperClass.getTypeName()));
+        final Class<?> finalClassObject = classObject;
+        Optional.ofNullable(classObject.getSuperclass())
+          .ifPresent(superClass -> graph.addNewEdge(finalClassObject.getTypeName(), superClass.getTypeName()));
+
         // the interfaces that our input/given class implements (supertypes of our class)
-        Class<?> finalClassObject1 = classObject;
-        Arrays.stream(classObject.getGenericInterfaces()).map(Type::getTypeName)
-          .forEach(genericInterfaceTypeName -> graph.addNewEdge(finalClassObject1.getTypeName(), genericInterfaceTypeName));
+        final Class<?> finalClassObject1 = classObject;
+        Arrays.stream(classObject.getInterfaces())
+          .map(Type::getTypeName)
+          .forEach(interfaceTypeName -> graph.addNewEdge(finalClassObject1.getTypeName(), interfaceTypeName));
 
-        Arrays.stream(classObject.getGenericInterfaces()).map(Type::getTypeName)
-          .forEach(genericInterfaceTypeName -> createGraph(graph, genericInterfaceTypeName));
+        Arrays.stream(classObject.getInterfaces()).map(Type::getTypeName)
+          .forEach(interfaceTypeName -> createGraph(graph, interfaceTypeName));
 
-        while (classObject.getGenericSuperclass() != null) {
-          createGraph(graph, classObject.getGenericSuperclass().getTypeName());
-          classObject = Class.forName(classObject.getGenericSuperclass().getTypeName());
+        while (classObject.getSuperclass() != null) {
+          createGraph(graph, classObject.getSuperclass().getTypeName());
+          classObject = Class.forName(classObject.getSuperclass().getTypeName());
         }
       } catch (ClassNotFoundException e) {
         //  throw new RuntimeException(e);
@@ -75,13 +92,27 @@ public class Graph<T> {
   }
 
   /**
-   * As the exercise suggests classes that are not included in jdk or input file should be skipped.
+   * As the exercise suggests classes that are NOT included in jdk or input file should be skipped.
    *
-   * @return
+   * @return boolean
    */
   private static boolean isPackageUnderTestValid(final String pckClassName) {
     return pckClassName.startsWith("sun.") || pckClassName.startsWith("com.sun.") || pckClassName.startsWith("java.")
            || pckClassName.startsWith("javax.") || pckClassName.startsWith("jdk.internal.")
            || packagesInputList.contains(pckClassName);
+  }
+
+  @Override
+  public String toString() {
+    final var builder = new StringBuilder();
+    //foreach loop that iterates over the keys
+    edgesMap.forEach((T key, Set<T> value) -> {
+                       builder.append(key.toString()).append(": ");
+                       //foreach loop for getting the vertices
+                       value.forEach((T w) -> builder.append(w.toString()).append(" "));
+                       builder.append("\n");
+                     }
+    );
+    return builder.toString();
   }
 }

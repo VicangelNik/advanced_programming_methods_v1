@@ -1,9 +1,7 @@
 import java.util.List;
 
-import org.example.accessor.FieldAccessor;
 import org.example.type.Graph;
 import org.example.type.SuperTypeClassFinding;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class SuperTypeClassFindingTest {
@@ -15,7 +13,7 @@ class SuperTypeClassFindingTest {
   @Test
   void getDeclaredTestCase() {
 
-   Graph<String> graph = new Graph<>();
+    Graph<String> graph = new Graph<>();
 //
 //    packagesInputList.forEach(graph::addNewVertex);
 

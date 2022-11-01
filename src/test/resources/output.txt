@@ -1,5 +1,20 @@
-1a: MIN_VALUE, MAX_VALUE, TYPE, digits, DigitTens, DigitOnes, sizeTable, value, SIZE, BYTES
-1b: public static final int java.lang.Integer.MIN_VALUE, public static final int java.lang.Integer.MAX_VALUE, public static final java.lang.Class java.lang.Integer.TYPE, static final char[] java.lang.Integer.digits, static final byte[] java.lang.Integer.DigitTens, static final byte[] java.lang.Integer.DigitOnes, static final int[] java.lang.Integer.sizeTable, private final int java.lang.Integer.value, public static final int java.lang.Integer.SIZE, public static final int java.lang.Integer.BYTES
-2a: numberOfLeadingZeros, numberOfTrailingZeros, bitCount, equals, toString, toString, toString, hashCode, hashCode, min
-2b: public static final int java.lang.Integer.MIN_VALUE, public static final int java.lang.Integer.MAX_VALUE, public static final java.lang.Class java.lang.Integer.TYPE, static final char[] java.lang.Integer.digits, static final byte[] java.lang.Integer.DigitTens, static final byte[] java.lang.Integer.DigitOnes, static final int[] java.lang.Integer.sizeTable, private final int java.lang.Integer.value, public static final int java.lang.Integer.SIZE, public static final int java.lang.Integer.BYTES
-4: java.lang.Number, java.lang.Object
+1a java.lang.Number : serialVersionUID
+1b java.lang.Number : private static final long java.lang.Number.serialVersionUID
+2a java.lang.Number : byteValue, shortValue
+2b java.lang.Number : private static final long java.lang.Number.serialVersionUID
+4 java.lang.Number : java.lang.Object, java.io.Serializable
+1a java.lang.Integer : MIN_VALUE, MAX_VALUE
+1b java.lang.Integer : public static final int java.lang.Integer.MIN_VALUE, public static final int java.lang.Integer.MAX_VALUE
+2a java.lang.Integer : numberOfLeadingZeros, numberOfTrailingZeros
+2b java.lang.Integer : public static final int java.lang.Integer.MIN_VALUE, public static final int java.lang.Integer.MAX_VALUE
+4 java.lang.Integer : java.lang.constant.Constable, java.lang.constant.ConstantDesc
+1a java.lang.constant.Constable : 
+1b java.lang.constant.Constable : 
+2a java.lang.constant.Constable : describeConstable
+2b java.lang.constant.Constable : 
+4 java.lang.constant.Constable : 
+1a java.lang.String : value, coder
+1b java.lang.String : private final byte[] java.lang.String.value, private final byte java.lang.String.coder
+2a java.lang.String : value, equals
+2b java.lang.String : private final byte[] java.lang.String.value, private final byte java.lang.String.coder
+4 java.lang.String : java.lang.constant.Constable, java.lang.CharSequence

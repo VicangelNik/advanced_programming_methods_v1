@@ -12,10 +12,11 @@ public class AccessorInheritedWrapper {
     this.iAccessor = iAccessor;
   }
 
-  public StringBuilder getStringBuilder(String pckClassName, String exId) {
+  public StringBuilder getStringBuilder(String pckClassName, String exId, StringBuilder stringBuilder) {
     final List<? super AccessibleObject> fieldList = new LinkedList<>();
     iAccessor.getDeclaredAndInherited(fieldList, pckClassName);
-    final var builder = new StringBuilder(exId);
-    return builder.append(String.join(", ", fieldList.stream().map(Object::toString).toList())).append(System.lineSeparator());
+    stringBuilder.append(exId).append(pckClassName).append(" : ");
+    return stringBuilder.append(String.join(", ", fieldList.stream().map(Object::toString).toList()))
+      .append(System.lineSeparator());
   }
 }
