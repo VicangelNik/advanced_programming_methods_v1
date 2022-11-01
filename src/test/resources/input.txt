@@ -1,0 +1,4 @@
+java.lang.Number
+java.lang.Integer
+java.lang.constant.Constable
+java.lang.String
