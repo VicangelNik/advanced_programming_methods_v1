@@ -10,6 +10,7 @@ import org.example.error.ApplicationException;
 import org.example.file.FileWriterHandler;
 import org.example.file.ReadAllFilesFileReader;
 import org.example.type.Graph;
+import org.example.type.SubTypeClassFinding;
 import org.example.type.SuperTypeClassFinding;
 
 public class Main {
@@ -25,8 +26,9 @@ public class Main {
     final var fieldAccessor = new FieldAccessor(topN);
     final var methodAccessor = new MethodAccessor(topN);
     final var fieldAccessorInheritedWrapper = new AccessorInheritedWrapper(fieldAccessor);
-    final var methodAccessorInheritedWrapper = new AccessorInheritedWrapper(fieldAccessor);
+    final var methodAccessorInheritedWrapper = new AccessorInheritedWrapper(methodAccessor);
     final var superTypeClassFinding = new SuperTypeClassFinding(topN);
+    final var subTypeClassFinding = new SubTypeClassFinding(topN);
 
     Graph<String> graph = new Graph<>();
     packagesInputList.forEach(pckClassName ->
@@ -36,19 +38,13 @@ public class Main {
     packagesInputList.forEach(pckClassName -> {
 
       fieldAccessor.getDeclared(pckClassName, stringBuilder);
-      fieldAccessorInheritedWrapper.getStringBuilder(pckClassName, "1b ", stringBuilder);
+      fieldAccessorInheritedWrapper.wrapCallGetDeclaredAndInherited(pckClassName, "1b ", stringBuilder);
       methodAccessor.getDeclared(pckClassName, stringBuilder);
-      methodAccessorInheritedWrapper.getStringBuilder(pckClassName, "2b ", stringBuilder);
+      methodAccessorInheritedWrapper.wrapCallGetDeclaredAndInherited(pckClassName, "2b ", stringBuilder);
+      subTypeClassFinding.findSubTypesFromClass(graph, pckClassName, stringBuilder);
       superTypeClassFinding.findSuperTypesFromClass(graph, pckClassName, stringBuilder);
-
-      fileWriterHandler.writeToFile(stringBuilder.toString());
     });
-
-//
-//    packagesInputList.forEach(pckClassName ->
-//
-//  );
-
+    fileWriterHandler.writeToFile(stringBuilder.toString());
   }
 
   private static void checkInputParameters(final String[] args) {

@@ -1,6 +1,5 @@
 package org.example.accessor;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -17,22 +16,22 @@ public final class FieldAccessor implements IAccessor {
   }
 
   @Override
-  public StringBuilder getDeclared(String pckClassName, StringBuilder stringBuilder) {
-    stringBuilder.append("1a ").append(pckClassName). append(" : ");
+  public void getDeclared(String pckClassName, StringBuilder stringBuilder) {
+    stringBuilder.append("1a ").append(pckClassName).append(" : ");
     try {
       final Class<?> classObject = Class.forName(pckClassName);
       final List<String> fieldNameList = Stream.of(classObject.getDeclaredFields()).limit(topN).map(Field::getName).toList();
-      return stringBuilder.append(String.join(", ", fieldNameList)).append(System.lineSeparator());
+      stringBuilder.append(String.join(", ", fieldNameList)).append(System.lineSeparator());
     } catch (ClassNotFoundException e) {
       throw new ApplicationException(e);
     }
   }
 
   @Override
-  public void getDeclaredAndInherited(List<? super AccessibleObject> fieldList, String pckClassName) {
+  public void getDeclaredAndInherited(List<String> fieldList, String pckClassName) {
     try {
       Class<?> classObject = Class.forName(pckClassName);
-      fieldList.addAll(Arrays.stream(classObject.getDeclaredFields()).limit(topN).toList());
+      fieldList.addAll(Arrays.stream(classObject.getDeclaredFields()).map(Field::getName).limit(topN).toList());
       if (classObject.getSuperclass() != null && fieldList.size() < topN) {
         getDeclaredAndInherited(fieldList, classObject.getSuperclass().getTypeName());
       }

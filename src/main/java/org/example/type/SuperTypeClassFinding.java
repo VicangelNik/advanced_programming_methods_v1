@@ -8,9 +8,9 @@ public class SuperTypeClassFinding {
     this.topN = topN;
   }
 
-  public StringBuilder findSuperTypesFromClass(Graph<String> graph, String pckClassName, StringBuilder stringBuilder) {
-    stringBuilder.append("4 ").append(pckClassName).append(" : ");
-    return stringBuilder.append(String.join(", ", graph.getVertex(pckClassName).stream().limit(topN).toList()))
+  public void findSuperTypesFromClass(Graph<String> graph, String pckClassName, StringBuilder stringBuilder) {
+    stringBuilder.append("4 ").append(pckClassName).append(" : ")
+      .append(String.join(", ", graph.getVertex(pckClassName).stream().limit(topN).toList()))
       .append(System.lineSeparator());
   }
 }

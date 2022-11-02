@@ -50,6 +50,10 @@ public class Graph<T> {
     return edgesMap.get(key);
   }
 
+  public Map<T, Set<T>> getEdgesMap() {
+    return edgesMap;
+  }
+
   /**
    * @param graph
    * @param pckClassName
