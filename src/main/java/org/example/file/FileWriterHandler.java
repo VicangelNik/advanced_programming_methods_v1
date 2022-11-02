@@ -1,5 +1,6 @@
 package org.example.file;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -13,9 +14,15 @@ public class FileWriterHandler implements IFileWriterHandler {
     this.outputFilePath = outputFilePath;
   }
 
+  /**
+   * Creates the file if the file does not exist. If it exists, file will be overwritten.
+   *
+   * @param result of methods
+   */
   @Override
   public void writeToFile(final String result) {
-    try (FileWriter myWriter = new FileWriter(outputFilePath)) {
+    try (final FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath);
+         final FileWriter myWriter = new FileWriter(fileOutputStream.getFD())) {
       myWriter.write(result);
       myWriter.flush();
     } catch (IOException e) {

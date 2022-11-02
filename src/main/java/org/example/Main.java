@@ -57,9 +57,10 @@ public class Main {
       throw new ApplicationException("input file does not exist");
     }
 
-    if (args[1] == null || !new File(args[1]).exists()) {
+    if (args[1] == null || args[1].isBlank()) {
       throw new ApplicationException("output file does not exist");
     }
+
     try {
       topN = Integer.parseInt(args[2]);
     } catch (NumberFormatException ex) {
