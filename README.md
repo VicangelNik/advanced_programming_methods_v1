@@ -14,7 +14,7 @@ You can download the code via Github in your local directory
 git clone https://github.com/VicangelNik/advanced_programming_methods_v1.git
 ```
 
-Through you IDE you can run the application or with maven you can create the executable file.
+Through you IDE you can run the application or with maven you can create the executable jar file.
 ```bash
 mvn clean install
 ```

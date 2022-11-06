@@ -47,7 +47,7 @@ public class Graph<T> {
    * @param key
    */
   public Set<T> getVertex(T key) {
-    return edgesMap.get(key);
+    return edgesMap.getOrDefault(key, new HashSet<>());
   }
 
   public Map<T, Set<T>> getEdgesMap() {
