@@ -3,6 +3,7 @@ package org.example.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SubTypeClassFinding extends TypeClassFinding {
 
@@ -20,6 +21,6 @@ public class SubTypeClassFinding extends TypeClassFinding {
         subTypeList.add(key);
       }
     });
-    stringBuilder.append(String.join(", ", subTypeList.stream().limit(topN).toList())).append(System.lineSeparator());
+    stringBuilder.append(subTypeList.stream().limit(topN).collect(Collectors.joining(", "))).append(System.lineSeparator());
   }
 }
