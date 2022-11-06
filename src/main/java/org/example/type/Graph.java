@@ -1,24 +1,56 @@
 package org.example.type;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.example.Main.packagesInputList;
+import org.example.error.ApplicationException;
 
-public class Graph<T> {
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
 
-  private Map<T, Set<T>> edgesMap = new HashMap<>();
+public class Graph {
 
-  public void addNewVertex(T s) {
+  private Map<String, Set<String>> edgesMap = new HashMap<>();
+
+  private List<String> packagesInputList = new ArrayList<>();
+
+  public Graph(List<String> packagesInputList) {
+    this.packagesInputList = packagesInputList;
+    packagesInputList.forEach(this::fillGraphFromPackage);
+    getClassInfoSet().stream().map(ClassInfo::getName).forEach(this::fillGraphFromPackage);
+  }
+
+  private Set<ClassInfo> getClassInfoSet() {
+    ClassPath classPath = null;
+    final Set<ClassInfo> classInfoSet = new HashSet<>();
+    try {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      while (classLoader != null) {
+        classPath = ClassPath.from(classLoader);
+        classInfoSet.addAll(classPath.getAllClasses().stream()
+                              .filter(classInfo -> isPackageUnderTestValid(classInfo.getPackageName())).collect(Collectors.toSet()));
+        classLoader = classLoader.getParent();
+      }
+    } catch (IOException e) {
+      throw new ApplicationException(e);
+    }
+    return classInfoSet;
+  }
+
+  public void addNewVertex(String s) {
     edgesMap.put(s, new HashSet<>());
   }
 
-  public void addNewEdge(T source, T destination) {
+  public void addNewEdge(String source, String destination) {
     if (!edgesMap.containsKey(source)) {
       addNewVertex(source);
     }
@@ -31,11 +63,11 @@ public class Graph<T> {
   /**
    * Vertex in the graph indicates a package
    */
-  public Set<T> getVertex(T key) {
+  public Set<String> getVertex(String key) {
     return edgesMap.getOrDefault(key, new HashSet<>());
   }
 
-  public Map<T, Set<T>> getEdgesMap() {
+  public Map<String, Set<String>> getEdgesMap() {
     return edgesMap;
   }
 
@@ -44,7 +76,7 @@ public class Graph<T> {
    * because the latter return the implementation (java.lang.Comparable<java.lang.Integer>)
    * but we want just the java.lang.Comparable in order to be recognized by Class.forName
    */
-  public static void createGraph(Graph<String> graph, String pckClassName) {
+  private void fillGraphFromPackage(String pckClassName) {
     if (isPackageUnderTestValid(pckClassName)) {
       try {
         Class<?> classObject = Class.forName(pckClassName);
@@ -52,21 +84,21 @@ public class Graph<T> {
         // the class that our input/given class extends (supertype of our class)
         final Class<?> finalClassObject = classObject;
         Optional.ofNullable(classObject.getSuperclass())
-          .ifPresent(superClass -> graph.addNewEdge(finalClassObject.getTypeName(), superClass.getTypeName()));
+          .ifPresent(superClass -> addNewEdge(finalClassObject.getTypeName(), superClass.getTypeName()));
 
         // the interfaces that our input/given class implements (supertypes of our class)
         final Class<?> finalClassObject1 = classObject;
         Arrays.stream(classObject.getInterfaces())
           .map(Type::getTypeName)
-          .forEach(interfaceTypeName -> graph.addNewEdge(finalClassObject1.getTypeName(), interfaceTypeName));
+          .forEach(interfaceTypeName -> addNewEdge(finalClassObject1.getTypeName(), interfaceTypeName));
 
         // add to graph super and sub-types of given class' interfaces
         Arrays.stream(classObject.getInterfaces()).map(Type::getTypeName)
-          .forEach(interfaceTypeName -> createGraph(graph, interfaceTypeName));
+          .forEach(this::fillGraphFromPackage);
 
         while (classObject.getSuperclass() != null) {
           // add to graph class' superclass
-          createGraph(graph, classObject.getSuperclass().getTypeName());
+          fillGraphFromPackage(classObject.getSuperclass().getTypeName());
           classObject = Class.forName(classObject.getSuperclass().getTypeName());
         }
       } catch (ClassNotFoundException e) {
@@ -80,20 +112,20 @@ public class Graph<T> {
    *
    * @return boolean
    */
-  private static boolean isPackageUnderTestValid(final String pckClassName) {
+  private boolean isPackageUnderTestValid(final String pckClassName) {
     return pckClassName.startsWith("sun.") || pckClassName.startsWith("com.sun.") || pckClassName.startsWith("java.")
            || pckClassName.startsWith("javax.") || pckClassName.startsWith("jdk.internal.")
-           || packagesInputList.contains(pckClassName);
+           || pckClassName.startsWith("org.example.") || packagesInputList.contains(pckClassName);
   }
 
   @Override
   public String toString() {
     final var builder = new StringBuilder();
     //foreach loop that iterates over the keys
-    edgesMap.forEach((T key, Set<T> value) -> {
-                       builder.append(key.toString()).append(": ");
+    edgesMap.forEach((String key, Set<String> value) -> {
+                       builder.append(key).append(": ");
                        //foreach loop for getting the vertices
-                       value.forEach((T w) -> builder.append(w.toString()).append(" "));
+                       value.forEach((String w) -> builder.append(w).append(" "));
                        builder.append("\n");
                      }
     );

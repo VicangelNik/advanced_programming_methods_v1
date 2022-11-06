@@ -1,7 +1,5 @@
 import java.util.List;
 
-import org.example.type.Graph;
-import org.example.type.SuperTypeClassFinding;
 import org.junit.jupiter.api.Test;
 
 class SuperTypeClassFindingTest {
@@ -13,15 +11,15 @@ class SuperTypeClassFindingTest {
   @Test
   void getDeclaredTestCase() {
 
-    Graph<String> graph = new Graph<>();
-//
-//    packagesInputList.forEach(graph::addNewVertex);
+    // Graph<String> graph = new Graph<>();
 
-    final var superTypeClassFinding = new SuperTypeClassFinding(10);
-    Graph.createGraph(graph, packagesInputList.get(1));
-//    packagesInputList.forEach(pckClassName ->
-//                                System.out.println(superTypeClassFinding.findSuperClassesFromClass(pckClassName)));
+    //    packagesInputList.forEach(graph::addNewVertex);
 
-    System.out.println(graph);
+    //  final var superTypeClassFinding = new SuperTypeClassFinding(10);
+    // Graph.fillGraphFromPackage(graph, packagesInputList.get(1));
+    //    packagesInputList.forEach(pckClassName ->
+    //                                System.out.println(superTypeClassFinding.findSuperClassesFromClass(pckClassName)));
+
+    // System.out.println(graph);
   }
 }

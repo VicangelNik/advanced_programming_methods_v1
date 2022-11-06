@@ -11,7 +11,7 @@ public abstract class TypeClassFinding {
     this.topN = topN;
   }
 
-  public abstract void findTypeFromClass(final Graph<String> graph,
+  public abstract void findTypeFromClass(final Graph graph,
                                          final String pckClassName,
                                          final StringBuilder stringBuilder);
 }

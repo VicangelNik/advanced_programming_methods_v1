@@ -8,7 +8,7 @@ public class SuperTypeClassFinding extends TypeClassFinding {
     super(topN);
   }
 
-  public void findTypeFromClass(Graph<String> graph, String pckClassName, StringBuilder stringBuilder) {
+  public void findTypeFromClass(Graph graph, String pckClassName, StringBuilder stringBuilder) {
     stringBuilder.append("4 ").append(pckClassName).append(" : ")
       .append(graph.getVertex(pckClassName).stream().limit(topN).collect(Collectors.joining(", ")))
       .append(System.lineSeparator());

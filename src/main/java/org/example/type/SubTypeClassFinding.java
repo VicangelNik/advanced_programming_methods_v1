@@ -11,7 +11,7 @@ public class SubTypeClassFinding extends TypeClassFinding {
     super(topN);
   }
 
-  public void findTypeFromClass(final Graph<String> graph,
+  public void findTypeFromClass(final Graph graph,
                                 final String pckClassName,
                                 final StringBuilder stringBuilder) {
     stringBuilder.append("3 ").append(pckClassName).append(" : ");

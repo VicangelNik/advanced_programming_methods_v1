@@ -3,9 +3,9 @@ package org.example;
 import java.io.File;
 import java.util.List;
 
+import org.example.accessor.AccessorClass;
 import org.example.accessor.AccessorInheritedWrapper;
 import org.example.accessor.FieldAccessorClass;
-import org.example.accessor.AccessorClass;
 import org.example.accessor.MethodAccessorClass;
 import org.example.error.ApplicationException;
 import org.example.file.FileWriterHandler;
@@ -22,7 +22,7 @@ import org.example.type.TypeClassFinding;
 public class Main {
 
   private static int topN = 10;
-  public static List<String> packagesInputList;
+  private static List<String> packagesInputList;
 
   public static void main(String[] args) {
     checkInputParameters(args);
@@ -36,7 +36,7 @@ public class Main {
     final var superTypeClassFinding = getTypeClassFinding("super");
     final var subTypeClassFinding = getTypeClassFinding("sub");
 
-    final Graph<String> graph = initGraph();
+    final Graph graph = new Graph(packagesInputList);
 
     final var stringBuilder = new StringBuilder();
 
@@ -71,12 +71,6 @@ public class Main {
     } catch (NumberFormatException ex) {
       throw new ApplicationException(ex);
     }
-  }
-
-  private static Graph<String> initGraph() {
-    final Graph<String> graph = new Graph<>();
-    packagesInputList.forEach(pckClassName -> Graph.createGraph(graph, pckClassName));
-    return graph;
   }
 
   private static AccessorClass getAccessor(final String accessor) {
