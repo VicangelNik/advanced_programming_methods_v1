@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.example.accessor.MethodAccessor;
+import org.example.accessor.MethodAccessorClass;
 import org.example.file.ReadAllFilesFileReader;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class MethodAccessorTest {
   void getDeclaredTestCase() {
     System.out.println(inputFilePath);
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
-    final var methodAccessor = new MethodAccessor(10);
+    final var methodAccessor = new MethodAccessorClass(10);
     StringBuilder stringBuilder = new StringBuilder();
 //    fileHandler.readFile().forEach(pckClassName ->
 //                                     Assertions.assertFalse(methodAccessor.getDeclared(pckClassName, stringBuilder).toString().isBlank())
@@ -24,7 +24,7 @@ class MethodAccessorTest {
   @Test
   void getDeclaredAndInheritedTestCase() {
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
-    final var methodAccessor = new MethodAccessor(10);
+    final var methodAccessor = new MethodAccessorClass(10);
     final List<String> methodList = new LinkedList<>();
     fileHandler.readFile().forEach(pckClassName -> {
       methodAccessor.getDeclaredAndInherited(methodList, pckClassName);

@@ -4,14 +4,16 @@ import java.io.File;
 import java.util.List;
 
 import org.example.accessor.AccessorInheritedWrapper;
-import org.example.accessor.FieldAccessor;
-import org.example.accessor.MethodAccessor;
+import org.example.accessor.FieldAccessorClass;
+import org.example.accessor.AccessorClass;
+import org.example.accessor.MethodAccessorClass;
 import org.example.error.ApplicationException;
 import org.example.file.FileWriterHandler;
 import org.example.file.ReadAllFilesFileReader;
 import org.example.type.Graph;
 import org.example.type.SubTypeClassFinding;
 import org.example.type.SuperTypeClassFinding;
+import org.example.type.TypeClassFinding;
 
 /**
  * Reflection is a feature in the Java programming language. It allows an executing Java program to examine or "introspect" upon itself, and manipulate internal properties of the program.
@@ -27,12 +29,12 @@ public class Main {
     final var fileHandler = new ReadAllFilesFileReader(args[0]);
     packagesInputList = fileHandler.readFile();
     final var fileWriterHandler = new FileWriterHandler(args[1]);
-    final var fieldAccessor = new FieldAccessor(topN);
-    final var methodAccessor = new MethodAccessor(topN);
+    final var fieldAccessor = getAccessor("field");
+    final var methodAccessor = getAccessor("method");
     final var fieldAccessorInheritedWrapper = new AccessorInheritedWrapper(fieldAccessor);
     final var methodAccessorInheritedWrapper = new AccessorInheritedWrapper(methodAccessor);
-    final var superTypeClassFinding = new SuperTypeClassFinding(topN);
-    final var subTypeClassFinding = new SubTypeClassFinding(topN);
+    final var superTypeClassFinding = getTypeClassFinding("super");
+    final var subTypeClassFinding = getTypeClassFinding("sub");
 
     final Graph<String> graph = initGraph();
 
@@ -75,5 +77,25 @@ public class Main {
     final Graph<String> graph = new Graph<>();
     packagesInputList.forEach(pckClassName -> Graph.createGraph(graph, pckClassName));
     return graph;
+  }
+
+  private static AccessorClass getAccessor(final String accessor) {
+    if ("field".equals(accessor)) {
+      return new FieldAccessorClass(topN);
+    } else if ("method".equals(accessor)) {
+      return new MethodAccessorClass(topN);
+    } else {
+      throw new ApplicationException("Given accessor could not be recognized");
+    }
+  }
+
+  private static TypeClassFinding getTypeClassFinding(final String type) {
+    if ("super".equals(type)) {
+      return new SuperTypeClassFinding(topN);
+    } else if ("sub".equals(type)) {
+      return new SubTypeClassFinding(topN);
+    } else {
+      throw new ApplicationException("Given type could not be recognized");
+    }
   }
 }

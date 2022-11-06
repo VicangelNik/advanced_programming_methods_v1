@@ -2,9 +2,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.example.accessor.FieldAccessor;
+import org.example.accessor.FieldAccessorClass;
 import org.example.file.ReadAllFilesFileReader;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class FieldAccessorTest {
@@ -15,7 +14,7 @@ class FieldAccessorTest {
   void getDeclaredTestCase() {
     System.out.println(inputFilePath);
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
-    final var fieldAccessor = new FieldAccessor(10);
+    final var fieldAccessor = new FieldAccessorClass(10);
     StringBuilder stringBuilder = new StringBuilder();
 //    fileHandler.readFile().forEach(pckClassName ->
 //                                     Assertions.assertFalse(fieldAccessor.getDeclared(pckClassName, stringBuilder).toString().isBlank()));
@@ -24,7 +23,7 @@ class FieldAccessorTest {
   @Test
   void getDeclaredAndInheritedTestCase() {
     final var fileHandler = new ReadAllFilesFileReader(inputFilePath);
-    final var fieldAccessor = new FieldAccessor(30);
+    final var fieldAccessor = new FieldAccessorClass(30);
     final List<String> fieldList = new LinkedList<>();
     fileHandler.readFile().forEach(pckClassName -> {
       fieldAccessor.getDeclaredAndInherited(fieldList, pckClassName);
