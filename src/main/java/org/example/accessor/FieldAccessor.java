@@ -7,6 +7,11 @@ import java.util.stream.Stream;
 
 import org.example.error.ApplicationException;
 
+/**
+ * @author Nikiforos Xylogiannopoulos
+ * @apiNote classObject.getFields() returns only public fields but classObject.getDeclaredFields() returns all fields
+ * Also Field::toString instead of Field::getName is used to write the full signature of a field.
+ */
 public final class FieldAccessor implements IAccessor {
 
   private final int topN;
@@ -20,7 +25,7 @@ public final class FieldAccessor implements IAccessor {
     stringBuilder.append("1a ").append(pckClassName).append(" : ");
     try {
       final Class<?> classObject = Class.forName(pckClassName);
-      final List<String> fieldNameList = Stream.of(classObject.getDeclaredFields()).limit(topN).map(Field::getName).toList();
+      final List<String> fieldNameList = Stream.of(classObject.getDeclaredFields()).limit(topN).map(Field::toString).toList();
       stringBuilder.append(String.join(", ", fieldNameList)).append(System.lineSeparator());
     } catch (ClassNotFoundException e) {
       throw new ApplicationException(e);
@@ -31,7 +36,7 @@ public final class FieldAccessor implements IAccessor {
   public void getDeclaredAndInherited(List<String> fieldList, String pckClassName) {
     try {
       Class<?> classObject = Class.forName(pckClassName);
-      fieldList.addAll(Arrays.stream(classObject.getDeclaredFields()).map(Field::getName).limit(topN).toList());
+      fieldList.addAll(Arrays.stream(classObject.getDeclaredFields()).map(Field::toString).limit(topN).toList());
       if (classObject.getSuperclass() != null && fieldList.size() < topN) {
         getDeclaredAndInherited(fieldList, classObject.getSuperclass().getTypeName());
       }
