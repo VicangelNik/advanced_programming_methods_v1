@@ -18,19 +18,6 @@ public class Graph<T> {
     edgesMap.put(s, new HashSet<>());
   }
 
-  public void addNewEdge(T source, T destination, boolean bidirectional) {
-    if (!edgesMap.containsKey(source)) {
-      addNewVertex(source);
-    }
-    if (!edgesMap.containsKey(destination)) {
-      addNewVertex(destination);
-    }
-    edgesMap.get(source).add(destination);
-    if (bidirectional) {
-      edgesMap.get(destination).add(source);
-    }
-  }
-
   public void addNewEdge(T source, T destination) {
     if (!edgesMap.containsKey(source)) {
       addNewVertex(source);
@@ -43,8 +30,6 @@ public class Graph<T> {
 
   /**
    * Vertex in the graph indicates a package
-   *
-   * @param key
    */
   public Set<T> getVertex(T key) {
     return edgesMap.getOrDefault(key, new HashSet<>());
@@ -55,16 +40,11 @@ public class Graph<T> {
   }
 
   /**
-   * @param graph
-   * @param pckClassName
-   *
-   * @return Graph
-   *
    * @apiNote getInterfaces, getSuperclass are used instead of getGenericInterfaces, getGenericSuperclass
    * because the latter return the implementation (java.lang.Comparable<java.lang.Integer>)
    * but we want just the java.lang.Comparable in order to be recognized by Class.forName
    */
-  public static Graph<String> createGraph(Graph<String> graph, String pckClassName) {
+  public static void createGraph(Graph<String> graph, String pckClassName) {
     if (isPackageUnderTestValid(pckClassName)) {
       try {
         Class<?> classObject = Class.forName(pckClassName);
@@ -80,19 +60,19 @@ public class Graph<T> {
           .map(Type::getTypeName)
           .forEach(interfaceTypeName -> graph.addNewEdge(finalClassObject1.getTypeName(), interfaceTypeName));
 
+        // add to graph super and sub-types of given class' interfaces
         Arrays.stream(classObject.getInterfaces()).map(Type::getTypeName)
           .forEach(interfaceTypeName -> createGraph(graph, interfaceTypeName));
 
         while (classObject.getSuperclass() != null) {
+          // add to graph class' superclass
           createGraph(graph, classObject.getSuperclass().getTypeName());
           classObject = Class.forName(classObject.getSuperclass().getTypeName());
         }
       } catch (ClassNotFoundException e) {
-        //  throw new RuntimeException(e);
         System.out.println("ClassNotFoundException In: " + pckClassName);
       }
     }
-    return graph;
   }
 
   /**

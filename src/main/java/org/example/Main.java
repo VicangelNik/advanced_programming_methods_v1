@@ -34,9 +34,8 @@ public class Main {
     final var superTypeClassFinding = new SuperTypeClassFinding(topN);
     final var subTypeClassFinding = new SubTypeClassFinding(topN);
 
-    Graph<String> graph = new Graph<>();
-    packagesInputList.forEach(pckClassName ->
-                                Graph.createGraph(graph, pckClassName));
+    final Graph<String> graph = initGraph();
+
     final var stringBuilder = new StringBuilder();
 
     packagesInputList.forEach(pckClassName -> {
@@ -45,8 +44,8 @@ public class Main {
       fieldAccessorInheritedWrapper.wrapCallGetDeclaredAndInherited(pckClassName, "1b ", stringBuilder);
       methodAccessor.getDeclared(pckClassName, stringBuilder);
       methodAccessorInheritedWrapper.wrapCallGetDeclaredAndInherited(pckClassName, "2b ", stringBuilder);
-      subTypeClassFinding.findSubTypesFromClass(graph, pckClassName, stringBuilder);
-      superTypeClassFinding.findSuperTypesFromClass(graph, pckClassName, stringBuilder);
+      subTypeClassFinding.findTypeFromClass(graph, pckClassName, stringBuilder);
+      superTypeClassFinding.findTypeFromClass(graph, pckClassName, stringBuilder);
     });
     fileWriterHandler.writeToFile(stringBuilder.toString());
   }
@@ -70,5 +69,11 @@ public class Main {
     } catch (NumberFormatException ex) {
       throw new ApplicationException(ex);
     }
+  }
+
+  private static Graph<String> initGraph() {
+    final Graph<String> graph = new Graph<>();
+    packagesInputList.forEach(pckClassName -> Graph.createGraph(graph, pckClassName));
+    return graph;
   }
 }

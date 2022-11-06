@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SubTypeClassFinding {
+public class SubTypeClassFinding extends TypeClassFinding {
 
-  private final int topN;
-
-  public SubTypeClassFinding(int topN) {
-    this.topN = topN;
+  public SubTypeClassFinding(final int topN) {
+    super(topN);
   }
 
-  public void findSubTypesFromClass(Graph<String> graph, String pckClassName, StringBuilder stringBuilder) {
+  public void findTypeFromClass(final Graph<String> graph,
+                                final String pckClassName,
+                                final StringBuilder stringBuilder) {
     stringBuilder.append("3 ").append(pckClassName).append(" : ");
     final List<String> subTypeList = new ArrayList<>();
     graph.getEdgesMap().forEach((String key, Set<String> valueSet) -> {
