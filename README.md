@@ -31,3 +31,12 @@ To execute the jar produced run:
 ```bash
 java -jar advanced_programming_methods_v1-1.0-SNAPSHOT.jar ./input.txt ./output.txt 10
 ```
+
+## References
+- stackoverflow: https://stackoverflow.com/questions/2548384/java-get-a-list-of-all-classes-loaded-in-the-jvm
+- baeldung: https://www.baeldung.com/java-list-classes-class-loader
+- javatpoint: https://www.javatpoint.com/java-graph
+- refactoring.guru: https://refactoring.guru/design-patterns/abstract-factory/java/example
+- udaniweeraratne: https://udaniweeraratne.wordpress.com/2016/01/21/how-to-generate-a-manifest-using-maven/
+- docs.oracle.com: https://docs.oracle.com/en/java/javase/14/docs/api/java.instrument/java/lang/instrument/package-summary.html
+- docs.oracle.com: https://docs.oracle.com/en/java/javase/14/docs/api/java.instrument/java/lang/instrument/package-summary.html
